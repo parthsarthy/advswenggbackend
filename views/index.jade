@@ -1,0 +1,72 @@
+extends layout
+block content
+  .container
+    h2 NodeJs and MongoDB - View, add, Edit and Delete records
+    .success
+    .error
+    form(id='form1' action='/add' method= 'post')
+      input#id(type='hidden', name='id', value='')
+      table
+        tr
+          td(style='text-align: center')
+            input#from(type='text', name='from', placeholder='From', value='')
+            | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            input#to(type='text', name='to', placeholder='To', value='')
+            | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            input#seats(type='text', name='seats', placeholder='Number of seats', value='')
+            | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            input#price(type='text', name='price', placeholder='price', value='')
+            | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            input#time(type='text', name='time', placeholder='time', value='')
+            | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            input#repetition(type='text', name='repetition', placeholder='repetition', value='')
+            | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            input#subbtn(type='submit', name='sub', value='Add Route')
+    table
+      tbody
+        tr
+          th ID
+          th From
+          th To
+          th Number of seats
+          th Price
+          th Time
+          th Repetition
+        if data.length
+         each item in data
+          tr
+            td #{item['_id']}
+            td #{item['from']}
+            td #{item['to']}
+            td #{item['seats']}
+            td #{item['price']}
+            td #{item['time']}
+            td #{item['repetition']}
+            td
+               a.editlink(href='javascript:void(0)', data-id='#{item["_id"]}') Edit
+               | &nbsp;&nbsp;
+               a(href='/delete?id=#{item["_id"]}', onclick='return confirm("You are going to delete this record. Continue?")') Delete
+
+    script(src='https://code.jquery.com/jquery-3.1.1.min.js')
+    script.
+      $(function() { 
+        $('.editlink').on('click', function(){
+          var id = $(this).data('id');
+          $.ajax({
+            method: "GET",
+            url: "/fetchdata",
+            data: { id:  id },
+          }).done(function( data ) {
+            //var result = $.parseJSON(data);
+            $('#id').val(data[0]['_id']);
+            $('#from').val(data[0]['from']);
+            $('#to').val(data[0]['to']);
+            $('#seats').val(data[0]['seats']);
+            $('#price').val(data[0]['price']);
+            $('#time').val(data[0]['time']);
+            $('#repetition').val(data[0]['repetition']);
+            $("#subbtn").val('Edit Journey');
+            $('#form1').attr('action', '/edit');
+          });
+        });
+      });
