@@ -33,15 +33,26 @@ router.route('/user')
       var userEmail = new user({
               email: req.body.email
             });
-      userEmail.save(function(err){
+      var x = collection.find({["email"]:userEmail}).limit(1).count();
+      console.log(x);
+      if(1===1){
+        res.send("haha");
+
+
+      }
+      else{
+        collection.update({'_id':new mongodb.ObjectID(req.body.id)} ,{$set:{'from': req.body.from,}})
+        userEmail.save(function(err){
         if(err) throw err;
         res.send(200);
         db.close()
-      });
+      });}
+      
     }
     else{
       res.send("False");
     }
+
   })
   });
 
