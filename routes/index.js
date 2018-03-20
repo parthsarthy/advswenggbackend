@@ -50,6 +50,20 @@ router.route('/user')
     }
   })
   });
+//retreiving offered rides for user
+router.route('/RetrievRides')
+  .post(function(req, res, next){
+      // var userObID = "";
+      mongoose.connect(dburl, options, function(err, db){
+        if(err) {console.log(err); throw error};
+        db.collection('offerride').aggregate([{$match: {"rideTo":req.body.rideTo}},{$match: {"rideFrom":req.body.rideFrom} },{$match: {"rideFrequency":req.body.rideFrequency}}]).toArray(function(err, docs){
+        if(err) throw err;
+        res.json(docs);
+        db.close();
+        })
+      });
+  });
+
 
 //Creating new rides
 router.route('/offerrides')
@@ -57,7 +71,7 @@ router.route('/offerrides')
       mongoose.connect(dburl, options, function(err, db) {
       if(err) {  console.log(err); throw err;  }
       data = '';
-      db.collection('offerride').aggregate([{$match: {"rideTo":"Dublin1"}},{$match: {"rideFrom":"Dublin2"} }]).toArray(function(err, docs){
+      db.collection('offerride').aggregate([{$match: {"rideTo":req.body.rideTo}},{$match: {"rideFrom":req.body.rideFrom} }]).toArray(function(err, docs){
         //db.collection('offerride').aggregate([{$match: {"rideTo":"Dublin1"}},{$match: {"rideFrom":"Dublin2"} }])
         if(err) throw err;
         res.json(docs);
