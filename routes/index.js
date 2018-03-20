@@ -10,20 +10,18 @@ var dburl = "mongodb://ec2-34-244-27-78.eu-west-1.compute.amazonaws.com:27018/ri
 var options = {user: "admin", pass:"admin1002"};
 var router = express.Router();
 
-
+//updating user emails
 router.route('/user')
   .get(function(req, res, next){
-    mongoose.connect(dburl, options, function(err, db) {  
+    mongoose.connect(dburl, options, function(err, db) {
     if(err) {  console.log(err); throw err;  }
     data = '';
     db.collection('userlogin').find().toArray(function(err, docs){
       if(err) throw err;
-      // res.render('index.jade', {data: docs});
       res.json(docs);
-      // console.log(docs);
       db.close();
+      })
     });
-  });
   })
   .post(function(req, res, next){
     mongoose.connect(dburl, options, function(err, db) {
@@ -33,29 +31,57 @@ router.route('/user')
       var userEmail = new user({
               email: req.body.email
             });
-      var x = collection.find({["email"]:userEmail}).limit(1).count();
-      console.log(x);
-      if(1===1){
-        res.send("haha");
-
-
+      collection.find({"email":String(req.body.email)}).count()
+      .then(function(numItems) {
+        if(numItems===1){
+        res.send("user exists");
       }
       else{
-        collection.update({'_id':new mongodb.ObjectID(req.body.id)} ,{$set:{'from': req.body.from,}})
         userEmail.save(function(err){
         if(err) throw err;
         res.send(200);
         db.close()
-      });}
-      
+      });
+      }
+    })
     }
     else{
       res.send("False");
     }
-
   })
   });
 
+//Creating new rides
+router.route('/offerrides')
+.post(function(req, res, next){
+  // var userObID = "";
+  mongoose.connect(dburl, options, function(err, db){
+    if(err) {throw error};
+    db.collection('userlogin').find({"email":req.body.email}).toArray(function(err, docs){
+      if(err) {throw error};
+      // Retuns id of the current user
+      var tempUser = new user(docs[0]);
+      // console.log(typeof(String(docs[0]._id)));
+      var rideInfo = new rides({
+        driverName: req.body.driverName,
+        driver:tempUser._id,
+        seats: req.body.seats,
+        price: req.body.price,
+        repeat: req.body.repeat,
+        rideFrequency: req.body.rideFrequency,
+        rideStartDate: req.body.rideStartDate,
+        rideTo: req.body.rideTo,
+        rideFrom: req.body.rideFrom
+      });
+      // console.log(rideInfo);
+      var ride = new rides(rideInfo);
+      ride.save(function(err){
+        if(err) {throw error}
+          res.sendStatus(200);
+      });
+    });
+  });
+});
 
 ///////////////////////////////////////////////////
   router.post('/findride', function(req,res,next){
@@ -115,7 +141,7 @@ router.post('/add', function(req, res, next) {
     else{
       res.send("False");
     }
-    
+
   });
 });
 router.post('/edit', function(req, res, next) {
