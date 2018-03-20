@@ -53,35 +53,48 @@ router.route('/user')
 
 //Creating new rides
 router.route('/offerrides')
-.post(function(req, res, next){
-  // var userObID = "";
-  mongoose.connect(dburl, options, function(err, db){
-    if(err) {throw error};
-    db.collection('userlogin').find({"email":req.body.email}).toArray(function(err, docs){
-      if(err) {throw error};
-      // Retuns id of the current user
-      var tempUser = new user(docs[0]);
-      // console.log(typeof(String(docs[0]._id)));
-      var rideInfo = new rides({
-        driverName: req.body.driverName,
-        driver:tempUser._id,
-        seats: req.body.seats,
-        price: req.body.price,
-        repeat: req.body.repeat,
-        rideFrequency: req.body.rideFrequency,
-        rideStartDate: req.body.rideStartDate,
-        rideTo: req.body.rideTo,
-        rideFrom: req.body.rideFrom
+  .get(function(req, res, next){
+      mongoose.connect(dburl, options, function(err, db) {
+      if(err) {  console.log(err); throw err;  }
+      data = '';
+      db.collection('offerride').aggregate([{$match: {"rideTo":"Dublin1"}},{$match: {"rideFrom":"Dublin2"} }]).toArray(function(err, docs){
+        //db.collection('offerride').aggregate([{$match: {"rideTo":"Dublin1"}},{$match: {"rideFrom":"Dublin2"} }])
+        if(err) throw err;
+        res.json(docs);
+        db.close();
+        })
       });
-      // console.log(rideInfo);
-      var ride = new rides(rideInfo);
-      ride.save(function(err){
-        if(err) {throw error}
-          res.sendStatus(200);
+    })
+  .post(function(req, res, next){
+    // var userObID = "";
+    mongoose.connect(dburl, options, function(err, db){
+      if(err) {throw error};
+      db.collection('userlogin').find({"email":req.body.email}).toArray(function(err, docs){
+        if(err) {throw error};
+        // Retuns id of the current user
+        var tempUser = new user(docs[0]);
+        // console.log(typeof(String(docs[0]._id)));
+        var rideInfo = new rides({
+          driverName: req.body.driverName,
+          driver:tempUser._id,
+          seats: req.body.seats,
+          price: req.body.price,
+          repeat: req.body.repeat,
+          rideFrequency: req.body.rideFrequency,
+          rideStartDate: req.body.rideStartDate,
+          rideTo: req.body.rideTo,
+          rideFrom: req.body.rideFrom
+        });
+        // console.log(rideInfo);
+        var ride = new rides(rideInfo);
+        ride.save(function(err){
+          if(err) {throw error}
+            res.sendStatus(200);
+        });
       });
     });
   });
-});
+
 
 ///////////////////////////////////////////////////
   router.post('/findride', function(req,res,next){
