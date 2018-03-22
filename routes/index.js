@@ -33,6 +33,7 @@ router.route('/user')
               name: req.body.name,
               profileImg: req.body.image_url
             });
+          console.log(userEmail);
       collection.find({"email":String(req.body.email)}).count()
       .then(function(numItems) {
         if(numItems===1){
