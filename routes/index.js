@@ -42,7 +42,7 @@ router.route('/user')
       else{
         userEmail.save(function(err){
         if(err) throw err;
-        res.send(200);
+        res.send("new user");
         db.close()
       });
       }
@@ -53,10 +53,10 @@ router.route('/user')
     }
   })
   });
+
 //retreiving offered rides for user
 router.route('/RetrievRides')
   .post(function(req, res, next){
-      // var userObID = "";
       mongoose.connect(dburl, options, function(err, db){
         if(err) {console.log(err); throw error};
         db.collection('offerride').aggregate([{$match: {"rideTo":req.body.rideTo}},{$match: {"rideFrom":req.body.rideFrom} },{$match: {"rideFrequency":req.body.rideFrequency}}]).toArray(function(err, docs){
