@@ -29,7 +29,9 @@ router.route('/user')
     var collection = db.collection('userlogin');
     if (validator.isEmail(String(req.body.email))){
       var userEmail = new user({
-              email: req.body.email
+              email: req.body.email,
+              name: req.body.name,
+              profileImg: req.body.image_url
             });
       collection.find({"email":String(req.body.email)}).count()
       .then(function(numItems) {
