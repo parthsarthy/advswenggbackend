@@ -55,7 +55,7 @@ router.route('/user')
   });
 
 //retreiving offered rides for user
-router.route('/RetrievRides')
+router.route('/FindRides')
   .post(function(req, res, next){
       mongoose.connect(dburl, options, function(err, db){
         if(err) {console.log(err); throw error};
@@ -97,15 +97,26 @@ router.route('/offerrides')
         var tempUser = new user(docs[0]);
         // console.log(typeof(String(docs[0]._id)));
         var rideInfo = new rides({
-          driverName: req.body.driverName,
+          //driverName: req.body.driverName,
           driver:tempUser._id,
-          seats: req.body.seats,
-          price: req.body.price,
+
+          noSeats: req.body.noSeats,
+          priceSeat: req.body.priceSeat,
           repeat: req.body.repeat,
-          rideFrequency: req.body.rideFrequency,
-          rideStartDate: req.body.rideStartDate,
+          phoneNo:req.body.phoneNo,
+
+          dateSelect:req.body.dateSelect,
+          monthSelect:req.body.monthSelect,
+          hourSelect:req.body.hourSelect,
+          minuteSelect:req.body.minuteSelect,
+
           rideTo: req.body.rideTo,
-          rideFrom: req.body.rideFrom
+          adress1To:req.body.adress1To,
+          adress2To:req.body.adress2To,
+
+          rideFrom: req.body.rideFrom,
+          adress1From:req.body.adress1From,
+          adress2From:req.body.adress2From
         });
         // console.log(rideInfo);
         var ride = new rides(rideInfo);

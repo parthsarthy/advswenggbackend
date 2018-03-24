@@ -2,18 +2,28 @@ var mongoose     = require('mongoose');
 var user         = require("../models/user")
 var Schema       = mongoose.Schema;
 var offerRide    = new Schema({
-    driverName: {type: String, required: true},
+    //driverName: {type: String, required: true},
     driver: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     },
-    seats: Number,
-    price: Number,
+    noSeats: Number,
+    priceSeat: Number,
     repeat: Boolean,
-    rideFrequency: String,
-    rideStartDate: String,
+    phoneNo:Number,
+
+    dateSelect:String,
+    monthSelect:String,
+    hourSelect:String,
+    minuteSelect:String,
+
     rideTo: {type: String, index: true},
-    rideFrom: {type: String, index: true}
+    adress1To:String,
+    adress2To:String,
+
+    rideFrom: {type: String, index: true},
+    adress1From:String,
+    adress2From:String,
 
   },{versionKey:false});
 
