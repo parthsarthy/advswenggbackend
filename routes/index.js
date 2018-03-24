@@ -91,32 +91,30 @@ router.route('/offerrides')
     // var userObID = "";
     mongoose.connect(dburl, options, function(err, db){
       if(err) {throw error};
-      db.collection('userlogin').find({"email":req.body.email}).toArray(function(err, docs){
+      db.collection('userlogin').find({"email":req.body.user_email}).toArray(function(err, docs){
         if(err) {throw error};
         // Retuns id of the current user
         var tempUser = new user(docs[0]);
         // console.log(typeof(String(docs[0]._id)));
         var rideInfo = new rides({
-          //driverName: req.body.driverName,
+          count: req.body.count,
           driver:tempUser._id,
 
-          noSeats: req.body.noSeats,
-          priceSeat: req.body.priceSeat,
+          noSeats: req.body.no_of_seats,
+          priceSeat: req.body.price_seat,
           repeat: req.body.repeat,
-          phoneNo:req.body.phoneNo,
+          phoneNo:req.body.phone_no,
 
-          dateSelect:req.body.dateSelect,
-          monthSelect:req.body.monthSelect,
-          hourSelect:req.body.hourSelect,
-          minuteSelect:req.body.minuteSelect,
+          dateSelect:req.body.date,
+          time:req.body.time,
 
-          rideTo: req.body.rideTo,
-          adress1To:req.body.adress1To,
-          adress2To:req.body.adress2To,
+          rideTo: req.body.area_to,
+          adress1To:req.body.adress1_to,
+          adress2To:req.body.adress2_to,
 
-          rideFrom: req.body.rideFrom,
-          adress1From:req.body.adress1From,
-          adress2From:req.body.adress2From
+          rideFrom: req.body.area_from,
+          adress1From:req.body.adress1_from,
+          adress2From:req.body.adress2_from
         });
         // console.log(rideInfo);
         var ride = new rides(rideInfo);

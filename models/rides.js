@@ -2,7 +2,7 @@ var mongoose     = require('mongoose');
 var user         = require("../models/user")
 var Schema       = mongoose.Schema;
 var offerRide    = new Schema({
-    //driverName: {type: String, required: true},
+    count: {type: String, required: true},
     driver: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
@@ -13,9 +13,8 @@ var offerRide    = new Schema({
     phoneNo:Number,
 
     dateSelect:String,
-    monthSelect:String,
-    hourSelect:String,
-    minuteSelect:String,
+    time:String,
+    
 
     rideTo: {type: String, index: true},
     adress1To:String,
