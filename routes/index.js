@@ -55,7 +55,7 @@ router.route('/user')
   });
 
 //retreiving offered rides for user
-router.route('/FindRides')
+router.route('/findrides')
   .post(function(req, res, next){
       mongoose.connect(dburl, options, function(err, db){
         if(err) {console.log(err); throw error};
