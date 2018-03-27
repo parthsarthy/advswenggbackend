@@ -11,19 +11,7 @@ var options = {user: "admin", pass:"admin1002"};
 var router = express.Router();
 
 //updating user emails
-router.route('/user')
-  .get(function(req, res, next){
-    mongoose.connect(dburl, options, function(err, db) {
-    if(err) {  console.log(err); throw err;  }
-    data = '';
-    db.collection('userlogin').find().toArray(function(err, docs){
-      if(err) throw err;
-      res.json(docs);
-      db.close();
-      })
-    });
-  })
-  .post(function(req, res, next){
+router.post('/user',function(req, res, next){
     mongoose.connect(dburl, options, function(err, db) {
     if(err) { throw err; }
     var collection = db.collection('userlogin');
@@ -55,13 +43,11 @@ router.route('/user')
   });
 
 //retreiving offered rides for user
-router.route('/findrides')
-  .post(function(req, res, next){
+router.post('/findrides',function(req, res, next){
       mongoose.connect(dburl, options, function(err, db){
         if(err) {console.log(err); throw error};
-        console.log(req.body.rideTo);
-        console.log(req.body.rideFrom);
-
+        console.log(req.body);
+        console.log(req.body);
         db.collection('offerride').aggregate([{$match: {"rideTo":req.body.rideTo}},{$match: {"rideFrom":req.body.rideFrom} }]).toArray(function(err, docs){
         if(err) throw err;
         res.json(docs);
@@ -82,6 +68,7 @@ if(typeof exports !== 'undefined') {
 
 
 //Creating new rides
+<<<<<<< HEAD
 router.route('/offerrides')
   .get(function(req, res, next){
       mongoose.connect(dburl, options, function(err, db) {
@@ -99,29 +86,39 @@ router.route('/offerrides')
     })
   .post(function(req, res, next){
     // var userObID = "";
+=======
+router.post('/offerrides',function(req, res, next){
+>>>>>>> a725ba0c68f5c609ee5f0cc81c3e4915b501cb0c
     mongoose.connect(dburl, options, function(err, db){
       if(err) {throw error};
       db.collection('userlogin').find({"email":req.body.user_email}).toArray(function(err, docs){
         if(err) {throw error};
         // Retuns id of the current user
+        var inpDate = req.body.date.split("/");
+        console.log(inpDate);
         var tempUser = new user(docs[0]);
+        var date = new Date(String(inpDate[0])+String(inpDate[1])+(new Date()).getFullYear()+" "+req.body.time);
+        var options = {
+            weekday: "long", year: "numeric", month: "short",
+            day: "numeric", hour: "2-digit", minute: "2-digit"
+        };
+        // console.log(date.toLocaleDateString("en-US",options));
+        // console.log(date.toDateString("en-US"));
+
+
         // console.log(typeof(String(docs[0]._id)));
         var rideInfo = new rides({
           count: req.body.count,
           driver:tempUser._id,
-
           noSeats: req.body.no_of_seats,
           priceSeat: req.body.price_seat,
           repeat: req.body.repeat,
           phoneNo:req.body.phone_no,
-
           dateSelect:req.body.date,
-          time:req.body.time,
-
+          time:date,
           rideTo: req.body.area_to,
           adress1To:req.body.adress1_to,
           adress2To:req.body.adress2_to,
-
           rideFrom: req.body.area_from,
           adress1From:req.body.adress1_from,
           adress2From:req.body.adress2_from
@@ -135,20 +132,6 @@ router.route('/offerrides')
       });
     });
   });
-
-
-///////////////////////////////////////////////////
-  router.post('/findride', function(req,res,next){
-    mongoose.connect(dburl, options, function(err, db) {
-      if(err) {throw error; }
-      var collection = offerrides;
-      collection.find()
-    });
-  });
-
-
-
-// router.get('/checkuser', function(req, res, next){});
 
 router.get('/', function(req, res, next) {
   mongoose.connect(dburl, options, function(err, db) {
