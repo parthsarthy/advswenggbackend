@@ -59,9 +59,38 @@ router.post('/findrides',function(req, res, next){
       });
   });
 
+function testFunction () {
+    return 1;
+}
+
+// If we're running under Node, 
+if(typeof exports !== 'undefined') {
+    exports.testFunction = testFunction;
+}
+
 
 //Creating new rides
+<<<<<<< HEAD
+router.route('/offerrides')
+  .get(function(req, res, next){
+      mongoose.connect(dburl, options, function(err, db) {
+      if(err) {  console.log(err); throw err;  }
+      data = '';
+      
+      lame_test();
+      db.collection('offerride').aggregate([{$match: {"rideTo":"D2"}},{$match: {"rideFrom":"D1"} }]).toArray(function(err, docs){
+        //db.collection('offerride').aggregate([{$match: {"rideTo":"Dublin1"}},{$match: {"rideFrom":"Dublin2"} }])
+        if(err) throw err;
+        res.json(docs);
+        db.close();
+        })
+      });
+    })
+  .post(function(req, res, next){
+    // var userObID = "";
+=======
 router.post('/offerrides',function(req, res, next){
+>>>>>>> a725ba0c68f5c609ee5f0cc81c3e4915b501cb0c
     mongoose.connect(dburl, options, function(err, db){
       if(err) {throw error};
       db.collection('userlogin').find({"email":req.body.user_email}).toArray(function(err, docs){
