@@ -71,6 +71,15 @@ router.route('/findrides')
       });
   });
 
+function testFunction () {
+    return 1;
+}
+
+// If we're running under Node, 
+if(typeof exports !== 'undefined') {
+    exports.testFunction = testFunction;
+}
+
 
 //Creating new rides
 router.route('/offerrides')
@@ -78,7 +87,8 @@ router.route('/offerrides')
       mongoose.connect(dburl, options, function(err, db) {
       if(err) {  console.log(err); throw err;  }
       data = '';
-
+      
+      lame_test();
       db.collection('offerride').aggregate([{$match: {"rideTo":"D2"}},{$match: {"rideFrom":"D1"} }]).toArray(function(err, docs){
         //db.collection('offerride').aggregate([{$match: {"rideTo":"Dublin1"}},{$match: {"rideFrom":"Dublin2"} }])
         if(err) throw err;
