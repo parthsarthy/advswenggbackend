@@ -54,8 +54,6 @@ router.post('/findrides',function(req, res, next){
             console.log(populatedTransactions);
             res.json(populatedTransactions);
         })
-
-
         db.close();
         })
       });
