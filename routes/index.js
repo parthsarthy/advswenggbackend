@@ -46,12 +46,16 @@ router.post('/user',function(req, res, next){
 router.post('/findrides',function(req, res, next){
       mongoose.connect(dburl, options, function(err, db){
         if(err) {console.log(err); throw error};
-        console.log(req.body);
-        console.log(req.body);
-        db.collection('offerride').aggregate([{$match: {"rideTo":req.body.rideTo}},{$match: {"rideFrom":req.body.rideFrom} }]).toArray(function(err, docs){
+        // console.log(req.body);
+        db.collection('offerride').aggregate(
+          { $and: [ {"rideTo":req.body.rideTo},{"rideFrom":req.body.rideFrom},{"noSeats":{$lte: req.body.seats}}]}).toArray(function(err, docs){
         if(err) throw err;
-        res.json(docs);
-        console.log(docs);
+        user.populate(docs, {path: 'driver'}, function(err, populatedTransactions){
+            console.log(populatedTransactions);
+            res.json(populatedTransactions);
+        })
+
+
         db.close();
         })
       });
@@ -75,8 +79,6 @@ router.post('/offerrides',function(req, res, next){
         };
         // console.log(date.toLocaleDateString("en-US",options));
         // console.log(date.toDateString("en-US"));
-
-
         // console.log(typeof(String(docs[0]._id)));
         var rideInfo = new rides({
           count: req.body.count,

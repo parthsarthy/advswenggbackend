@@ -16,7 +16,6 @@ var offerRide    = new Schema({
     rideTo: {type: String, index: true},
     adress1To:String,
     adress2To:String,
-
     rideFrom: {type: String, index: true},
     adress1From:String,
     adress2From:String,
