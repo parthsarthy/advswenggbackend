@@ -47,12 +47,19 @@ router.post('/findrides',function(req, res, next){
       mongoose.connect(dburl, options, function(err, db){
         if(err) {console.log(err); throw error};
         db.collection('offerride').find(
-              {"rideTo":{$in:[req.body.rideTo]}}, {"rideFrom":{$in:[req.body.rideFrom]}}
+              {$and: [{"rideTo":{$in:[req.body.area_to]}}, {"rideFrom":{$in:[req.body.area_from]}}]}
           ).toArray(function(err, docs){
         if(err) throw err;
         user.populate(docs, {path: 'driver'}, function(err, populatedTransactions){
-            console.log(populatedTransactions);
-            res.json(populatedTransactions);
+            if(populatedTransactions.length===0)
+            {
+              res.send("Not Found");
+            }
+            else
+            {
+              console.log(populatedTransactions);
+              res.json(populatedTransactions);
+            }
         })
         db.close();
         })
@@ -99,7 +106,6 @@ router.post('/offerrides',function(req, res, next){
           driver:tempUser._id,
           noSeats: req.body.no_of_seats,
           priceSeat: req.body.price_seat,
-          repeat: req.body.repeat,
           phoneNo:req.body.phone_no,
           dateSelect:date.toDateString("en-US"),
           time:time,
@@ -108,7 +114,8 @@ router.post('/offerrides',function(req, res, next){
           adress1To:req.body.adress1_to,
           adress2To:req.body.adress2_to,
           adress1From:req.body.adress1_from,
-          adress2From:req.body.adress2_from
+          adress2From:req.body.adress2_from,
+          repeat: req.body.repeat,
         });
         // console.log(rideInfo);
         var ride = new rides(rideInfo);
