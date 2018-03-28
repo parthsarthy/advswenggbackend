@@ -46,9 +46,9 @@ router.post('/user',function(req, res, next){
 router.post('/findrides',function(req, res, next){
       mongoose.connect(dburl, options, function(err, db){
         if(err) {console.log(err); throw error};
-        // console.log(req.body);
-        db.collection('offerride').aggregate(
-          { $and: [ {"rideTo":req.body.rideTo},{"rideFrom":req.body.rideFrom},{"noSeats":{$lte: req.body.seats}}]}).toArray(function(err, docs){
+        db.collection('offerride').find(
+              {"rideTo":{$in:[req.body.rideTo]}}, {"rideFrom":{$in:[req.body.rideFrom]}}
+          ).toArray(function(err, docs){
         if(err) throw err;
         user.populate(docs, {path: 'driver'}, function(err, populatedTransactions){
             console.log(populatedTransactions);
@@ -77,16 +77,23 @@ router.post('/offerrides',function(req, res, next){
         if(err) {throw error};
         // Retuns id of the current user
         var inpDate = req.body.date.split("/");
-        console.log(inpDate);
         var tempUser = new user(docs[0]);
         var date = new Date(String(inpDate[0])+String(inpDate[1])+(new Date()).getFullYear()+" "+req.body.time);
         var options = {
             weekday: "long", year: "numeric", month: "short",
             day: "numeric", hour: "2-digit", minute: "2-digit"
         };
-        // console.log(date.toLocaleDateString("en-US",options));
-        // console.log(date.toDateString("en-US"));
-        // console.log(typeof(String(docs[0]._id)));
+
+        console.log(date.toDateString("en-US"));
+        if(date.getMinutes()===0)
+        {
+          min="00";
+        }
+        if (date.getSeconds()===0)
+        {
+          sec="00";
+        }
+        var time = date.getHours()+":"+min;
         var rideInfo = new rides({
           count: req.body.count,
           driver:tempUser._id,
@@ -94,12 +101,12 @@ router.post('/offerrides',function(req, res, next){
           priceSeat: req.body.price_seat,
           repeat: req.body.repeat,
           phoneNo:req.body.phone_no,
-          dateSelect:req.body.date,
-          time:date,
+          dateSelect:date.toDateString("en-US"),
+          time:time,
           rideTo: req.body.area_to,
+          rideFrom: req.body.area_from,
           adress1To:req.body.adress1_to,
           adress2To:req.body.adress2_to,
-          rideFrom: req.body.area_from,
           adress1From:req.body.adress1_from,
           adress2From:req.body.adress2_from
         });

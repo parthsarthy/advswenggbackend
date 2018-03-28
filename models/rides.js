@@ -12,7 +12,7 @@ var offerRide    = new Schema({
     repeat: Boolean,
     phoneNo:Number,
     dateSelect:String,
-    time:Date,
+    time:String,
     rideTo: {type: String, index: true},
     adress1To:String,
     adress2To:String,
