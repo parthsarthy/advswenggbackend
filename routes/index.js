@@ -66,16 +66,6 @@ router.post('/findrides',function(req, res, next){
       });
   });
 
-function testFunction () {
-    return 1;
-}
-
-// If we're running under Node,
-if(typeof exports !== 'undefined') {
-    exports.testFunction = testFunction;
-}
-
-
 //Creating new rides
 router.post('/offerrides',function(req, res, next){
     mongoose.connect(dburl, options, function(err, db){
@@ -126,6 +116,10 @@ router.post('/offerrides',function(req, res, next){
       });
     });
   });
+
+router.post('/requestmanager',function(req, res, next){
+  
+});
 
 router.get('/', function(req, res, next) {
   mongoose.connect(dburl, options, function(err, db) {
