@@ -136,9 +136,9 @@ router.post('/book',function(req, res, next){
     
 
       var book_details = new book({
-              sender_email: req.body.sender_email,
-              requester_email:req.body.requester_email,
-              ID: req.body.ID
+              sender_email: req.body.email,
+              reciever_email:req.body.user_email,
+              ID: req.body.driverID
             });
       var booking = new book(book_details);
       booking.save(function(err){
