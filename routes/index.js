@@ -5,6 +5,7 @@ var mongodb     = require('mongodb');
 var mongoose = require('mongoose');
 var rides = require('../models/rides');
 var user = require('../models/user');
+var book = require('../models/book');
 // DB Details
 var dburl = "mongodb://ec2-34-244-27-78.eu-west-1.compute.amazonaws.com:27018/ridealongthree";
 var options = {user: "admin", pass:"admin1002"};
@@ -126,6 +127,33 @@ router.post('/offerrides',function(req, res, next){
       });
     });
   });
+
+//send booking request
+router.post('/book',function(req, res, next){
+    mongoose.connect(dburl, options, function(err, db) {
+    if(err) { throw err; }
+    var collection = db.collection('book');
+    
+
+      var book_details = new book({
+              sender_email: req.body.sender_email,
+              requester_email:req.body.requester_email,
+              ID: req.body.ID,
+            });
+      var booking = new rides(book_details);
+      booking.save(function(err){
+        if(err) throw err;
+        console.log(req.body.sender_email);
+        console.log(req.body.requester_email);
+        console.log(req.body.ID);
+        res.sendStatus(200);
+        console.log("inserted")
+        db.close()
+      })
+    
+  })
+  });
+
 
 router.get('/', function(req, res, next) {
   mongoose.connect(dburl, options, function(err, db) {
