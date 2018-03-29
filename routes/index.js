@@ -138,15 +138,15 @@ router.post('/book',function(req, res, next){
       var book_details = new book({
               sender_email: req.body.sender_email,
               requester_email:req.body.requester_email,
-              ID: req.body.ID,
+              ID: req.body.ID
             });
-      var booking = new rides(book_details);
+      var booking = new book(book_details);
       booking.save(function(err){
         if(err) throw err;
         console.log(req.body.sender_email);
         console.log(req.body.requester_email);
         console.log(req.body.ID);
-        res.sendStatus(200);
+        res.send(200);
         console.log("inserted")
         db.close()
       })
