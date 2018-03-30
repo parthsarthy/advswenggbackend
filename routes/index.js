@@ -132,7 +132,7 @@ router.post('/offerrides',function(req, res, next){
 router.post('/checkReq',function(req, res, next){
     mongoose.connect(dburl, options, function(err, db){
       if(err) {throw error};
-      db.collection('book').find({"reciever_email":req.body.myemail}).toArray(function(err, docs){
+      db.collection('book').find({"reciever_email":req.body.email}).toArray(function(err, docs){
         if(err) {throw error};
 
         var tempbook = new book(docs[0]);
