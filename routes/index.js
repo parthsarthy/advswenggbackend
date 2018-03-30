@@ -118,58 +118,11 @@ router.post('/offerrides',function(req, res, next){
     });
   });
 
-//see the incoming request
-router.post('/checkReq',function(req, res, next){
-    mongoose.connect(dburl, options, function(err, db){
-      if(err) {throw error};
-      db.collection('book').find({"reciever_email":req.body.email}).toArray(function(err, docs){
-        if(err) {throw error};
-
-        var tempbook = new book(docs[0]);
-        console.log(tempbook)
-        console.log(tempbook.sender_email)
-        console.log(tempbook.ID)
-
-        db.collection('userlogin').find({"email":tempbook.sender_email}).toArray(function(err,docs){
-          if(err) {throw error};
-          var tempUser = new user(docs[0]);
-        //console.log(tempUser)/*
-        //console.log(tempUser.name)
-        //console.log(tempUser.ID)*/
-         
-
-
-        db.collection('offerride').find(tempbook.ID).toArray(function(err,docs){
-          if(err) {throw error};
-          var tempride = new rides(docs[0]);
-        //console.log(tempride)
-        /*
-        console.log(tempride.noSeats)
-        console.log(tempride.phoneNo)*/
-
-        var c = {};
-        c['tempUser'] = tempUser;
-        c['tempride'] = tempride;
-        //var c = tempUser.merge(tempride);
-        console.log(c);
-         
-
-        //var result = Object.assign({},tempUser, tempride);
-        //console.log(result)
-        res.sendStatus(200);
-      });
-        });
-      });
-    });
-  });
-
 //send booking request
 router.post('/book',function(req, res, next){
     mongoose.connect(dburl, options, function(err, db) {
     if(err) { throw err; }
     var collection = db.collection('book');
-
-
       var book_details = new book({
               sender_email: req.body.email,
               reciever_email:req.body.user_email,
