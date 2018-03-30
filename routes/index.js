@@ -158,8 +158,9 @@ router.post('/checkReq',function(req, res, next){
         console.log(tempride.phoneNo)*/
 
         var c = {};
-        c['tempUser'] = tempUser;
-        c['tempride'] = tempride;
+        c['tempUser']= tempUser;
+        c ['tempride']= tempride;
+
         //var c = tempUser.merge(tempride);
         console.log(c);
          
