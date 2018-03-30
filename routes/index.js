@@ -124,7 +124,6 @@ router.post('/checkReq',function(req, res, next){
       if(err) {throw error};
       db.collection('book').find({"reciever_email":req.body.email}).toArray(function(err, docs){
         if(err) {throw error};
-
         var tempbook = new book(docs[0]);
         console.log(tempbook)
         console.log(tempbook.sender_email)
@@ -136,25 +135,14 @@ router.post('/checkReq',function(req, res, next){
         //console.log(tempUser)/*
         //console.log(tempUser.name)
         //console.log(tempUser.ID)*/
-         
-
-
         db.collection('offerride').find(tempbook.ID).toArray(function(err,docs){
           if(err) {throw error};
           var tempride = new rides(docs[0]);
-        //console.log(tempride)
-        /*
-        console.log(tempride.noSeats)
-        console.log(tempride.phoneNo)*/
-
         var c = {};
-        c['tempUser']= tempUser;
-        c ['tempride']= tempride;
-
+        c['requestor']= tempUser;
+        c ['rideDetails']= tempride;
         //var c = tempUser.merge(tempride);
         console.log(c);
-         
-
         //var result = Object.assign({},tempUser, tempride);
         //console.log(result)
         res.sendStatus(200);
