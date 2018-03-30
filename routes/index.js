@@ -145,7 +145,8 @@ router.post('/checkReq',function(req, res, next){
         console.log(c);
         //var result = Object.assign({},tempUser, tempride);
         //console.log(result)
-        res.sendStatus(200);
+        res.json(c);
+        //res.sendStatus()
       });
         });
       });
