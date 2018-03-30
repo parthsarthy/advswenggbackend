@@ -67,16 +67,6 @@ router.post('/findrides',function(req, res, next){
       });
   });
 
-function testFunction () {
-    return 1;
-}
-
-// If we're running under Node,
-if(typeof exports !== 'undefined') {
-    exports.testFunction = testFunction;
-}
-
-
 //Creating new rides
 router.post('/offerrides',function(req, res, next){
     mongoose.connect(dburl, options, function(err, db){
@@ -179,8 +169,6 @@ router.post('/book',function(req, res, next){
     mongoose.connect(dburl, options, function(err, db) {
     if(err) { throw err; }
     var collection = db.collection('book');
-    
-
       var book_details = new book({
               sender_email: req.body.email,
               reciever_email:req.body.user_email,
@@ -196,7 +184,7 @@ router.post('/book',function(req, res, next){
         console.log("inserted")
         db.close()
       })
-    
+
   })
   });
 
