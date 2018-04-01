@@ -122,59 +122,37 @@ router.post('/offerrides',function(req, res, next){
 router.post('/checkReq',function(req, res, next){
     mongoose.connect(dburl, options, function(err, db){
       if(err) {throw error};
-      db.collection('book').find({"reciever_email":req.body.email}).toArray(function(err, docs){
-        if(err) {throw error};
-        var tempbook = new book(docs[0]);
-        console.log(tempbook)
-        console.log(tempbook.sender_email)
-        console.log(tempbook.ID)
-
-        db.collection('userlogin').find({"email":tempbook.sender_email}).toArray(function(err,docs){
-          if(err) {throw error};
-          var tempUser = new user(docs[0]);
-        //console.log(tempUser)/*
-        //console.log(tempUser.name)
-        //console.log(tempUser.ID)*/
-        db.collection('offerride').find(tempbook.ID).toArray(function(err,docs){
-          if(err) {throw error};
-          var tempride = new rides(docs[0]);
-        var c = {};
-        c['requestor']= tempUser;
-        c ['rideDetails']= tempride;
-        //var c = tempUser.merge(tempride);
-        console.log(c);
-        //var result = Object.assign({},tempUser, tempride);
-        //console.log(result)
-        res.json(c);
-        //res.sendStatus()
-      });
-        });
-      });
-    });
+      // db.collection('userlogin').find()({
+        db.collection('book').find({"reciever_email":req.body.email}).toArray(function(err, requests){
+        rides.populate(requests, {path: 'ID'}, function(err, result){
+          user.populate(result, {path: 'sender_email'}, function(err, fresult){
+            console.log(fresult);
+            res.send(fresult);
+          })
+        })
+    })
+    })
   });
 
 //send booking request
 router.post('/book',function(req, res, next){
     mongoose.connect(dburl, options, function(err, db) {
     if(err) { throw err; }
-    var collection = db.collection('book');
-      var book_details = new book({
-              sender_email: req.body.email,
-              reciever_email:req.body.user_email,
-              ID: req.body.driverID
-            });
-      var booking = new book(book_details);
-      booking.save(function(err){
-        if(err) throw err;
-        console.log(req.body.sender_email);
-        console.log(req.body.requester_email);
-        console.log(req.body.ID);
-        res.send(200);
-        console.log("inserted")
-        db.close()
+    db.collection('userlogin').find({"email":req.body.email}).toArray(function(err, docs){
+      console.log(docs);
+      var requestor = new user(docs[0]);
+       var book_details= new book({
+          sender_email: requestor._id,
+          reciever_email:req.body.user_email,
+          ID: req.body.driverID
+        });
+        book_details.save(function(err){
+          if(err) throw err;
+          res.send(book_details);
+          db.close()
+          })
+        })
       })
-
-  })
   });
 
 

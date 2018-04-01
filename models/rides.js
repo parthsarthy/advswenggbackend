@@ -22,16 +22,4 @@ var offerRide    = new Schema({
 
   },{versionKey:false});
 
-var findRide = new Schema({
-	driverName: String,
-    seats: Number,
-    price: Number,
-    repeat: Boolean,
-    rideFrequency: String,
-    rideStartDate: Date,
-    rideTo: String,
-    rideFrom: String
-});
-
 module.exports = mongoose.model('rides', offerRide, 'offerride');
-// module.exports = mongoose.model('findRide',findRide);
