@@ -9,7 +9,7 @@ var offerRide    = new Schema({
     },
     noSeats: Number,
     priceSeat: Number,
-    repeat: Boolean,
+    repeat: String,
     phoneNo:Number,
     dateSelect:String,
     time:String,
